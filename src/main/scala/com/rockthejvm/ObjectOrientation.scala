@@ -142,8 +142,9 @@ object ObjectOrientation extends App {
     2) helps making sense of the code ("reasoning about")
    */
   val reversedList = aList.reverse // returns a NEW list
+  // NG: aList.reverse without assignment
 
-  // Point #2: Scala is closest to the OO ideal`
+  // Point #2: Scala is closest to the OO ideal, althoght has mixing with functional programming
 
 
 }
