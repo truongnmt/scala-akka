@@ -15,7 +15,6 @@ object ScalaRecap {
   val anIfExpression: String = if (2 > 3) "bigger" else "smaller"
 
   // instructions vs expressions
-  // Unit means side effect, eg: print smt on console
   val theUnit: Unit = println("Hello, Scala") // Unit === "void"
 
   // OOP
