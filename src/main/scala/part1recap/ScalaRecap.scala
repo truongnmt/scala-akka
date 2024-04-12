@@ -2,7 +2,7 @@ package part1recap
 
 import java.util.concurrent.Executors
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Try, Success, Failure}
+import scala.util.{Failure, Success, Try}
 
 object ScalaRecap {
 
@@ -100,6 +100,44 @@ object ScalaRecap {
   // map, flatMap, filter, ...
   val doubledAsyncMOL: Future[Int] = aFuture.map(_ * 2)
 
+  ////////////////////////// ADVANCED SCALA RECAP///////////////////////////////////
+
+  // partial function: func that operate only on a subset of the given input
+  // when anything else, it will thrown an exception, match error
+  val partialFunction: PartialFunction[Int, Int] = {
+    case 1 => 42
+    case 2 => 65
+    case 5 => 999
+  }
+  val pf = (x: Int) => x match {
+    case 1 => 42
+    case 2 => 65
+    case 5 => 999
+  }
+  val function: (Int => Int) = pf
+  function(1) // 42
+
+  // lifting: turn a partial function into a total function from Int to Option[Int]
+  val lifted = partialFunction.lift
+  lifted(2) // Some(65)
+  lifted(6) // None => still works, no exception
+
+  // orElse
+  val pfChain = partialFunction.orElse[Int, Int] {
+    case 60 => 9000
+  }
+  pfChain(5) // 999 per partialFunction
+  pfChain(60) // 9000
+  pfChain(457) // thrown a matchError
+
+  // type aliases of more complex type
+  type ReceiveFunction = PartialFunction[Any, Unit]
+
+  def receive: ReceiveFunction = {
+    case 1 => println("hello")
+    case _ => println("confused...")
+  }
+
   // implicits
 
   // 1 - implicit arguments and values
@@ -123,6 +161,23 @@ object ScalaRecap {
     Person(name, 57)
 
   val daniel: Person = "Daniel" // string2Person("Daniel")
+
+  // need to organize implicit, otherwise it will confused us
+  // sorted method has implicit Ordering
+  implicit val inverseOrdering: Ordering[Int] = Ordering.fromLessThan(_ > _)
+  List(1,2,3).sorted // List(3,2,1) <- implicit value is automatically injected, local scope
+
+  // imported scope
+  import scala.concurrent.ExecutionContext.Implicits.global // global is an implicit
+//  val future = Future {
+//    println("hello, future")
+//  }
+
+  // order of the compiler: local -> imported scope -> companion
+  object Person {
+    implicit val personOrdering: Ordering[Person] = Ordering.fromLessThan((a,b) => a.name.compareTo(b.name) < 0)
+  }
+  List(Person("Bob", 1), Person("Alice", 2)).sorted
 
   def main(args: Array[String]): Unit = {
 
