@@ -1,9 +1,9 @@
 package part2actors
 
 import akka.actor.{Actor, ActorSystem, Props}
+import akka.actor.ActorRef
 
 object ActorsIntro extends App {
-
 
   // part1 - actor systems
   // heavyweight data structure that controls a number of threads under the hood
@@ -66,5 +66,55 @@ object ActorsIntro extends App {
   person ! "hi"
 
 
+  class SimpleActor extends Actor {
+    override def receive: Receive = {
+      case "Hi!" => context.sender() ! "Hello,there!" // reply to a message
+      // context.sender() = sender()
+      case message: String => println(s"[simple actor] I have received $message")
+      case number: Int => println(s"[${context.self}] I have received $number")
+      // context.self: Actor[ackka://...simpleActor#-123123123] (name of actor)#identifier
+      // context.self = self
+      case SpecialMessage(contents) => println(s"[simple actor] I have received something Special: $contents")
+      case SendMessageToYourself(content) =>
+        self ! content // then being processed by the case message
+      case SayHiTo(ref) => ref ! "Hi!" //(ref ! "Hi!")(self) // self is implicit value, can be ommit
+      case WirelessPhoneMessage(content, ref) => ref forward (content + "s") // I keep the original sending of the class
+    }
+  }
+  val simpleActor = actorSystem.actorOf(Props[SimpleActor], "simpleActor")
+  simpleActor ! "hello, actor"
+  simpleActor ! 42 // <- Akka retrieve this object and then invoke it with the argument that you have used for sending
+  // 1 - can send, "tell"  almost any type! primitive type and custom type with the condition:
+  // a) message must be IMMUTABLE
+  // b) messages must be SERIALIZABLE: means that JVM can transform it into a byte stream and send it to another JVM,
+  //    whether it is on the same machine or over the network
+  //    there are numbers of serialize protocol
+  //    but in practice we often use case class and case object, solve most of our need
 
+  case class SpecialMessage(contents: String)
+  simpleActor ! SpecialMessage("some special content")
+
+  // 2 - actors have information about their context and about themselves
+  // context.self == `this` in OOP == self
+
+  case class SendMessageToYourself(content: String)
+  simpleActor ! SendMessageToYourself("I am an actor and I am proud of it")
+
+  // 3 - actors can REPLY to messages
+  val alice = actorSystem.actorOf(Props[SimpleActor], "alice")
+  val bob = actorSystem.actorOf(Props[SimpleActor], "bob")
+
+  case class SayHiTo(ref: ActorRef)
+  alice ! SayHiTo(bob)
+
+  // 4 - dead letters
+  alice ! "Hi!" // sender is Actor.noSender = null, failed to reply, moved to dead letter
+
+  // 5 - forwarding messages
+  // D -> A -> B
+  // sending a message with the ORIGINAL sender
+  case class WirelessPhoneMessage(content: String, ref: ActorRef)
+  alice ! WirelessPhoneMessage("Hi", bob)
+
+  
 }
