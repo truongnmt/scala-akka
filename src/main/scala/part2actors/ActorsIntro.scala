@@ -189,4 +189,6 @@ object ActorsIntro extends App {
   bank ! Deposit(20)
   bank ! "Statement"
 
+  // question 1: how to make the command in order
+  // question 2: is there race condition modify the mutable internal state?
 }
