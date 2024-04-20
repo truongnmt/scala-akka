@@ -189,6 +189,37 @@ object ActorsIntro extends App {
   bank ! Deposit(20)
   bank ! "Statement"
 
-  // question 1: how to make the command in order
-  // question 2: is there race condition modify the mutable internal state?
+  /**
+   * question 1: does message comes in order?
+   *
+   * Akka has a thread pool that is shares with actors
+   * Akka schedules actors for execution
+   * - a few threads (100s) run LOTS of actors (1millions per GB heap)
+   *
+   * Communication between actors
+   * Sending message:
+   *   message is enqueued in the actor's mailbox (thread-safe!)
+   * Processing a message:
+   *   a thread is scheduled to run this actor
+   *   messages are extracted from the mailbox, in order
+   *   the thread invokes the handler on each message
+   *   at some point the actor is unscheduled
+   *
+   * Guarantess
+   * Only one thread operates on an actor at any time
+   *   actors are effectively single-threaded
+   *   no locks needed!
+   * Message delivery guarantees
+   *   at most once delivery
+   *   for any sender-receiver pair, the message order is maintained
+   *
+   *   eg: If Alice sends Bob message A followed by B
+   *       - Bob wil never receive duplicates of A or B
+   *       - Bob will always receive A before B (possibly with some others in between)
+   *
+   */
+
+
+
+  question 2: is there race condition modify the mutable internal state?
 }
