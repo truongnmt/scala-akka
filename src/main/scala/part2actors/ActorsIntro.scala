@@ -1,7 +1,6 @@
 package part2actors
 
-import akka.actor.{Actor, ActorSystem, Props}
-import akka.actor.ActorRef
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 
 object ActorsIntro extends App {
 
@@ -116,5 +115,78 @@ object ActorsIntro extends App {
   case class WirelessPhoneMessage(content: String, ref: ActorRef)
   alice ! WirelessPhoneMessage("Hi", bob)
 
-  
+  /**
+   * Excercises
+   *
+   * 1. a Counter actor
+   *   - Increment
+   *   - Decrement
+   *   - Print
+   */
+
+  class Counter extends Actor {
+    var count = 0
+    override def receive: Receive = {
+      case Increment(amount) => count += amount
+      case Decrement(amount) => count -= amount
+      case "show" => println(s"[counter] $count")
+    }
+  }
+
+  case class Increment(amount: Int)
+  case class Decrement(amount: Int)
+
+  val counter = actorSystem.actorOf(Props[Counter], "counter")
+  counter ! Increment(10)
+  counter ! Increment(10)
+  counter ! "show"
+  counter ! Decrement(20)
+  counter ! "show"
+
+  /**
+   * Excercises
+   *
+   * 2. a Back account as an actor
+   *   receives
+   *   - Deposit an amount
+   *   - Withdraw an amount
+   *   - Statement
+   *   replies with
+   *   - Success
+   *   - Failure
+   *
+   *   some other kind of actor will check the result either Success / Failure and print the result
+   */
+  class Bank extends Actor {
+    var balance = 0
+    var statement = ""
+    override def receive: Receive = {
+      case Deposit(amount) => {
+        balance += amount
+        statement = s"$statement" + s"\nDeposit: $amount, Balance: $balance"
+        println("Success")
+      }
+      case Withdraw(amount) => {
+        if (amount >= balance) {
+          balance -= amount
+          statement = s"$statement" + s"\nWithdraw: $amount, Balance: $balance"
+          println("Success")
+        } else {
+          println("Failure")
+        }
+      }
+      case "Statement" => println(statement)
+    }
+  }
+
+  case class Deposit(amount: Int)
+  case class Withdraw(amount: Int)
+
+  val bank = actorSystem.actorOf(Props[Bank], "bank")
+  bank ! Deposit(10)
+  bank ! Withdraw(10)
+  bank ! Deposit(10)
+  bank ! Deposit(20)
+  bank ! "Statement"
+
 }
