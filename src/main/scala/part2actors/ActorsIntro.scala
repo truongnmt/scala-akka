@@ -219,7 +219,5 @@ object ActorsIntro extends App {
    *
    */
 
-
-
-  question 2: is there race condition modify the mutable internal state?
+  // question 2: is there race condition modify the mutable internal state?
 }
