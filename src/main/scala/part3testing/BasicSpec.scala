@@ -3,7 +3,7 @@ package part3testing
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.testkit.{ImplicitSender, TestKit}
 import org.scalatest.BeforeAndAfterAll
-import org.scalatest.wordspec.AsyncWordSpecLike
+import org.scalatest.wordspec.AnyWordSpecLike
 
 import scala.concurrent.duration._
 import scala.util.Random
@@ -11,7 +11,7 @@ import scala.language.postfixOps
 
 class BasicSpec extends TestKit(ActorSystem("BasicSpec"))
   with ImplicitSender // passing testActor as implicit sender, used for communication with the actors that we are testing
-  with AsyncWordSpecLike
+  with AnyWordSpecLike
   with BeforeAndAfterAll {
 
   // setup
