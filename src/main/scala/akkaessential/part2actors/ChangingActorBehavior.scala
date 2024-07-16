@@ -1,11 +1,11 @@
-package part2actors
+package akkaessential.part2actors
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
-import part2actors.ChangingActorBehavior.Mom.MomStart
+import ChangingActorBehavior.Mom.MomStart
 
 object ChangingActorBehavior extends App {
 
-  import part2actors.ActorsIntro.{Counter, actorSystem}
+  import ActorsIntro.{Counter, actorSystem}
 
   object FussyKid {
     case object KidAccept

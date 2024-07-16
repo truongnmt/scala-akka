@@ -1,7 +1,7 @@
-package part2actors
+package akkaessential.part2actors
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
-import part2actors.ChildActors.CreditCard.{AttachToAccount, CheckStatus}
+import ChildActors.CreditCard.{AttachToAccount, CheckStatus}
 
 object ChildActors extends App {
 

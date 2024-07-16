@@ -1,4 +1,4 @@
-package part4faulttolerance
+package akkaessential.part4faulttolerance
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 

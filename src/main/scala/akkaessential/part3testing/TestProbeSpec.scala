@@ -1,4 +1,4 @@
-package part3testing
+package akkaessential.part3testing
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.testkit.{ImplicitSender, TestKit, TestProbe}

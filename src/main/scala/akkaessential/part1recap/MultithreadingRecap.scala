@@ -1,4 +1,4 @@
-package part1recap
+package akkaessential.part1recap
 
 import scala.util.{Failure, Success}
 

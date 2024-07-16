@@ -1,4 +1,4 @@
-package part1recap
+package akkaessential.part1recap
 
 import java.util.concurrent.Executors
 import scala.concurrent.{ExecutionContext, Future}

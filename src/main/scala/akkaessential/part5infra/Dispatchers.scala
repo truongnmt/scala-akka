@@ -1,4 +1,4 @@
-package part5infra
+package akkaessential.part5infra
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 
