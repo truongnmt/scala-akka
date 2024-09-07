@@ -164,15 +164,11 @@ object ActorsIntro extends App {
       case Deposit(amount) => {
         balance += amount
         statement = s"$statement" + s"\nDeposit: $amount, Balance: $balance"
-        println("Success")
       }
       case Withdraw(amount) => {
         if (amount >= balance) {
           balance -= amount
           statement = s"$statement" + s"\nWithdraw: $amount, Balance: $balance"
-          println("Success")
-        } else {
-          println("Failure")
         }
       }
       case "Statement" => println(statement)
