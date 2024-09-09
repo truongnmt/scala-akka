@@ -82,5 +82,12 @@ Operator Fusion and Async Boundaries
 Backpressure
 - synchronization of speed between upstream and downstream asynchronus components
 - if consumer are slow, consumer will send a signal to producer to slow down
+- default buffer in Akka Streams is 16
+- reactions to backpressure (in order):
+  - try to slow down if possible
+  - buffer elements until there's more demand
+  - drop down elements from the buffer if it overflows
+  - tear down/kill the whole stream (failure)
+- backpressure protocol is transparent to the user
 
-
+Graphs
