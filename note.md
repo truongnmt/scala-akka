@@ -91,3 +91,7 @@ Backpressure
 - backpressure protocol is transparent to the user
 
 Graphs
+- fanout: broadcast, balance, unzip
+- fanin: merge, balance, zip, concat
+- merge ~> balance -> sinks: takes 2 different sources emitting element at different speeds and events out the rate of production in between these 2 sources and split them equally in between two sinks
+  - useful when has some sources of elements and you don't know their rate of production. But at the end of the graph, you would like to have a steady flow of elements.
