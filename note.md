@@ -66,9 +66,21 @@ Materializing Streams
 - can reuse the same componeent in different graphs, different runs = different matterializations
   - => a component can materialized multiple times, 
 - a materialized value can be ANYTHING
+- viaMat toMat, can specify the direction; runWith will keep right
 
+Operator Fusion and Async Boundaries
+- by default, stream components are fused =  running on the same actor
+  - simpleSource.via(simpleFlow).via(simpleFlow2).to(simpleSink).run()
+  - run sequentially on the same actor
+- async boundaries between stream components
+  - simpleSource.via(simpleFlow).async.via(simpleFlow2).async.to(simpleSink).run()
+  - components run on different actors
+  - better throughput, best when individual components are expensive
+  - avoid when components are cheap
+  - ordering guarantees
 
-
-
+Backpressure
+- synchronization of speed between upstream and downstream asynchronus components
+- if consumer are slow, consumer will send a signal to producer to slow down
 
 
