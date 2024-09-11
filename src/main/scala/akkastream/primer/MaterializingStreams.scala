@@ -12,7 +12,7 @@ object MaterializingStreams extends App {
   // implicit val materializer: ActorMaterializer = ActorMaterializer()
   import system.dispatcher
 
-  val simpleGraph = Source(1 to 10).to(Sink.foreach(println))
+  val simpleGraph = Source(1 to 10).to(Sink.foreach(println)) // left most is returned
 //  val simpleMaterializedValue: NotUsed = simpleGraph.run()
 
   val source = Source(1 to 10)
@@ -55,6 +55,7 @@ object MaterializingStreams extends App {
     "I love streams",
     "Materialized values are killing me"
   ))
+
   val wordCountSink = Sink.fold[Int, String](0)((currentWords, newSentence) => currentWords + newSentence.split(" ").length)
   val g1 = sentenceSource.toMat(wordCountSink)(Keep.right).run()
   val g2 = sentenceSource.runWith(wordCountSink)
