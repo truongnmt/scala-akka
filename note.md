@@ -52,6 +52,12 @@ Persistent Actors:
 - safe to access mutable state in the callback
 - receiveRecover is called to restore the actor's state from the persisted events
 - mainly use API from akka-persistence library
+- persist method is actually message passing using actor, so it is order guaranteed
+
+Snapshots:
+- why?: long lived entities take long time to recover -> save checkpoints
+- with snapshots, not all peristed events are recovered, the latest snapshot and all events after that are recovered
+
 
 ==============================
 
