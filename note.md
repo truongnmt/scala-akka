@@ -44,6 +44,15 @@ When an actor handles a command
 When an actor starts/restarts
 - it replays all events with its persistence ID
 
+Persistent Actors:
+- When you receive a command
+  1) you create an EVENT to persist into the store
+  2) you persist the event, then pass in a callback that will get triggered once the event is written
+  3) we update the actor's state when the event has persisted
+- safe to access mutable state in the callback
+- receiveRecover is called to restore the actor's state from the persisted events
+- mainly use API from akka-persistence library
+
 ==============================
 
 Akka Stream
@@ -98,3 +107,18 @@ Graphs
 
 Open Graphs
 - 
+
+Intergrating with external services
+- mapAsync(parallelism = 4)
+  - mapAsync applies a a function to each element and returns a Future
+  - parallelism determines how many futures can run at the same time
+  - if one future fails, the whole stream fails
+  - relative ordering of elements is preserved, can use mapAsyncUnordered if ordering is not important
+  - increasing parralelism can increase throughput, if you don't require the ordering, mapAsyncUnordered is even faster
+  - mapAsync has to always wait for the futures to complete so that it can keep its order, if one of the futures is slow, it will slow down the whole stream, the futures are still evaluated in parallel, but mapAsync always waits for the future
+
+Akka features that surprise me:
+- mapAsync: consume concurrently, but keep the order
+- graph DSL: very powerful, but not easy to understand
+- async boundaries: part of the stream that runs on a different actor, improve throughput
+- backpressure: transparent to the user
