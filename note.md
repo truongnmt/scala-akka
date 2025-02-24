@@ -58,6 +58,9 @@ Snapshots:
 - why?: long lived entities take long time to recover -> save checkpoints
 - with snapshots, not all peristed events are recovered, the latest snapshot and all events after that are recovered
 
+PersistAsync:
+- high throughput use cae, relaxed event ordering guarantee
+- https://github.com/rockthejvm/akka-persistence/blob/master/src/main/scala/part2_event_sourcing/PersistAsyncDemo.scala
 
 ==============================
 
